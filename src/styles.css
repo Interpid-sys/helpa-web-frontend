@@ -154,7 +154,29 @@
 .sos-ripple-delay-2 { animation-delay: 1.8s; }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.fade-up { animation: fade-up 0.8s cubic-bezier(0.19, 1, 0.22, 1) both; }
+.fade-up { animation: fade-up 0.9s cubic-bezier(0.19, 1, 0.22, 1) both; }
+
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1), transform 0.9s cubic-bezier(0.19, 1, 0.22, 1); }
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* SOS signal path animation */
+@keyframes signal-dash {
+  to { stroke-dashoffset: -24; }
+}
+.signal-path { stroke-dasharray: 4 6; animation: signal-dash 2.4s linear infinite; }
+
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+.node-pulse { animation: node-pulse 2.8s ease-in-out infinite; }
+
+@keyframes sos-core {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.sos-core { transform-origin: center; transform-box: fill-box; animation: sos-core 1.8s ease-in-out infinite; }
