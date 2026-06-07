@@ -617,24 +617,21 @@ function FaqSection() {
         </h2>
       </div>
       <div className="divide-y divide-border border-t border-border">
-        {FAQ.map((item) => {
-          const ref = useRef<HTMLDetailsElement>(null);
-          return (
-            <details key={item.q} ref={ref} className="group py-6">
-              <summary className="flex justify-between items-center cursor-pointer list-none gap-6">
-                <span className="font-medium text-lg pr-2 group-hover:text-accent transition-colors">
-                  {item.q}
-                </span>
-                <span className="font-serif text-2xl text-muted-foreground group-open:rotate-45 transition-transform shrink-0">
-                  +
-                </span>
-              </summary>
-              <p className="mt-4 text-muted-foreground text-[0.95rem] leading-relaxed max-w-2xl">
-                {item.a}
-              </p>
-            </details>
-          );
-        })}
+        {FAQ.map((item) => (
+          <details key={item.q} className="group py-6">
+            <summary className="flex justify-between items-center cursor-pointer list-none gap-6">
+              <span className="font-medium text-lg pr-2 group-hover:text-accent transition-colors">
+                {item.q}
+              </span>
+              <span className="font-serif text-2xl text-muted-foreground group-open:rotate-45 transition-transform shrink-0">
+                +
+              </span>
+            </summary>
+            <p className="mt-4 text-muted-foreground text-[0.95rem] leading-relaxed max-w-2xl">
+              {item.a}
+            </p>
+          </details>
+        ))}
       </div>
     </section>
   );
