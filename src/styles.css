@@ -144,3 +144,17 @@
     color: var(--color-foreground);
   }
 }
+
+@keyframes sos-ripple {
+  0% { transform: scale(0.6); opacity: 0.55; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+.sos-ripple { animation: sos-ripple 2.8s cubic-bezier(0, 0, 0.2, 1) infinite; }
+.sos-ripple-delay { animation-delay: 0.9s; }
+.sos-ripple-delay-2 { animation-delay: 1.8s; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.8s cubic-bezier(0.19, 1, 0.22, 1) both; }
