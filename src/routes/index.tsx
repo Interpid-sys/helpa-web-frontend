@@ -1,27 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+"use client";
+
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Helpa — Community-powered emergency response for Nigeria" },
-      {
-        name: "description",
-        content:
-          "Helpa is building a community-powered emergency response network for Nigeria. Join the waitlist to help decide where we launch first.",
-      },
-      { property: "og:title", content: "Helpa — Community-powered emergency response" },
-      {
-        property: "og:description",
-        content:
-          "Emergency help should not depend on who answers first. Join the waitlist for Helpa's coordinated response network.",
-      },
-      { property: "og:type", content: "website" },
-    ],
-  }),
-  component: Index,
-});
 
 const ROLES = [
   "Prefer not to say",
@@ -70,13 +50,33 @@ const STEPS = [
 ];
 
 const ECOSYSTEM = [
-  { code: "R-01", title: "Residents", note: "First eyes and hands on the ground in any neighbourhood." },
-  { code: "R-02", title: "Families", note: "Trusted circles who must know first, with full context." },
+  {
+    code: "R-01",
+    title: "Residents",
+    note: "First eyes and hands on the ground in any neighbourhood.",
+  },
+  {
+    code: "R-02",
+    title: "Families",
+    note: "Trusted circles who must know first, with full context.",
+  },
   { code: "R-03", title: "Estates", note: "Security teams and gated community coverage layers." },
   { code: "R-04", title: "Campuses", note: "Duty of care for students, staff, and visitors." },
-  { code: "R-05", title: "Fleet operators", note: "Drivers and vehicles already moving across the city." },
-  { code: "R-06", title: "Medical & security teams", note: "Trained, verified, response-ready professionals." },
-  { code: "R-07", title: "Institutions", note: "Hospitals, agencies, and public services as the wider net." },
+  {
+    code: "R-05",
+    title: "Fleet operators",
+    note: "Drivers and vehicles already moving across the city.",
+  },
+  {
+    code: "R-06",
+    title: "Medical & security teams",
+    note: "Trained, verified, response-ready professionals.",
+  },
+  {
+    code: "R-07",
+    title: "Institutions",
+    note: "Hospitals, agencies, and public services as the wider net.",
+  },
 ];
 
 const FAQ = [
@@ -102,7 +102,7 @@ const FAQ = [
   },
 ];
 
-function Index() {
+export default function Index() {
   useScrollReveal();
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/15">
@@ -149,10 +149,18 @@ function Nav() {
         <span className="font-serif italic text-2xl tracking-tight">Helpa</span>
       </span>
       <div className="hidden md:flex gap-9 text-[11px] font-medium text-muted-foreground uppercase tracking-[0.2em]">
-        <a href="#why" className="hover:text-foreground transition-colors">Why</a>
-        <a href="#how" className="hover:text-foreground transition-colors">How it works</a>
-        <a href="#ecosystem" className="hover:text-foreground transition-colors">Network</a>
-        <a href="#faq" className="hover:text-foreground transition-colors">FAQ</a>
+        <a href="#why" className="hover:text-foreground transition-colors">
+          Why
+        </a>
+        <a href="#how" className="hover:text-foreground transition-colors">
+          How it works
+        </a>
+        <a href="#ecosystem" className="hover:text-foreground transition-colors">
+          Network
+        </a>
+        <a href="#faq" className="hover:text-foreground transition-colors">
+          FAQ
+        </a>
       </div>
       <a
         href="#waitlist"
@@ -176,9 +184,8 @@ function Hero() {
           Emergency help should not depend on who answers first.
         </h1>
         <p className="max-w-2xl mx-auto text-muted-foreground text-lg md:text-xl leading-relaxed mb-10 text-pretty">
-          Helpa is a community-powered emergency response network for Nigeria —
-          one signal that reaches your trusted circle, nearby responders, and the
-          people closest to where you are.
+          Helpa is a community-powered emergency response network for Nigeria — one signal that
+          reaches your trusted circle, nearby responders, and the people closest to where you are.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-5">
           <a
@@ -315,13 +322,7 @@ function SignalDiagram() {
         stroke="oklch(0.45 0.13 25)"
         strokeOpacity="0.35"
       />
-      <circle
-        cx={center.x}
-        cy={center.y}
-        r="16"
-        fill="oklch(0.45 0.13 25)"
-        className="sos-core"
-      />
+      <circle cx={center.x} cy={center.y} r="16" fill="oklch(0.45 0.13 25)" className="sos-core" />
       <text
         x={center.x}
         y={center.y + 74}
@@ -379,30 +380,29 @@ function WhyExist() {
         </div>
         <div className="space-y-7 pt-2 text-[1.0625rem] leading-relaxed text-muted-foreground">
           <p>
-            Today, getting help in a crisis means dialing a number and hoping
-            someone picks up. Lines are congested, addresses are hard to
-            communicate, and the people closest to you — who could actually help —
-            often never know anything happened.
+            Today, getting help in a crisis means dialing a number and hoping someone picks up.
+            Lines are congested, addresses are hard to communicate, and the people closest to you —
+            who could actually help — often never know anything happened.
           </p>
           <div className="border-l-2 border-primary/50 pl-6">
             <h3 className="font-medium text-foreground mb-1.5">Isolation</h3>
             <p className="text-sm">
-              A single call places everything on one overwhelmed system, with no
-              fallback if no one answers.
+              A single call places everything on one overwhelmed system, with no fallback if no one
+              answers.
             </p>
           </div>
           <div className="border-l-2 border-primary/50 pl-6">
             <h3 className="font-medium text-foreground mb-1.5">Invisibility</h3>
             <p className="text-sm">
-              Responders and community members nearby have no way of knowing
-              someone needs them within walking distance.
+              Responders and community members nearby have no way of knowing someone needs them
+              within walking distance.
             </p>
           </div>
           <div className="border-l-2 border-primary/50 pl-6">
             <h3 className="font-medium text-foreground mb-1.5">Coordination</h3>
             <p className="text-sm">
-              Even when help arrives, family, security, and medics rarely share
-              the same thread of what is actually happening.
+              Even when help arrives, family, security, and medics rarely share the same thread of
+              what is actually happening.
             </p>
           </div>
         </div>
@@ -426,8 +426,14 @@ function HowItWorks() {
 
         <ol className="relative reveal">
           {/* Vertical timeline rail */}
-          <div className="absolute left-[11px] top-2 bottom-2 w-px bg-border md:hidden" aria-hidden />
-          <div className="hidden md:block absolute left-0 right-0 top-[34px] h-px bg-border" aria-hidden />
+          <div
+            className="absolute left-[11px] top-2 bottom-2 w-px bg-border md:hidden"
+            aria-hidden
+          />
+          <div
+            className="hidden md:block absolute left-0 right-0 top-[34px] h-px bg-border"
+            aria-hidden
+          />
 
           <div className="grid md:grid-cols-4 gap-10 md:gap-8">
             {STEPS.map((step, i) => (
@@ -520,9 +526,8 @@ function Ecosystem() {
             Real response is built by a community, not an app.
           </h2>
           <p className="text-command-foreground/70 text-lg leading-relaxed">
-            Helpa only works when the people who can actually show up are part of
-            it. We are not announcing partnerships — we are explaining who the
-            network needs, and inviting them in.
+            Helpa only works when the people who can actually show up are part of it. We are not
+            announcing partnerships — we are explaining who the network needs, and inviting them in.
           </p>
         </div>
 
@@ -549,8 +554,8 @@ function Ecosystem() {
         </div>
 
         <p className="mt-10 text-sm text-command-foreground/55 max-w-xl reveal">
-          No partnerships implied. Every line above is a role the Helpa network
-          requires to function — and a seat we are openly inviting people into.
+          No partnerships implied. Every line above is a role the Helpa network requires to function
+          — and a seat we are openly inviting people into.
         </p>
       </div>
     </section>
@@ -592,8 +597,8 @@ function WaitlistForm() {
             Help us decide where Helpa launches.
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Only your name is required. Anything else you share helps us plan
-            coverage where you live.
+            Only your name is required. Anything else you share helps us plan coverage where you
+            live.
           </p>
         </div>
 
@@ -601,7 +606,9 @@ function WaitlistForm() {
           <form
             onSubmit={onSubmit}
             className={`bg-background rounded-2xl shadow-sm border border-border overflow-hidden transition-all duration-500 ${
-              submitted ? "opacity-0 -translate-y-2 pointer-events-none absolute inset-0" : "opacity-100"
+              submitted
+                ? "opacity-0 -translate-y-2 pointer-events-none absolute inset-0"
+                : "opacity-100"
             }`}
           >
             {/* Panel header */}
@@ -615,12 +622,23 @@ function WaitlistForm() {
 
             <div className="p-7 space-y-5">
               <Field label="Full name" required>
-                <FormInput name="name" type="text" required maxLength={120} placeholder="Your name" />
+                <FormInput
+                  name="name"
+                  type="text"
+                  required
+                  maxLength={120}
+                  placeholder="Your name"
+                />
               </Field>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field label="Email" hint="optional">
-                  <FormInput name="email" type="email" maxLength={255} placeholder="name@example.com" />
+                  <FormInput
+                    name="email"
+                    type="email"
+                    maxLength={255}
+                    placeholder="name@example.com"
+                  />
                 </Field>
                 <Field label="Phone" hint="optional">
                   <FormInput name="phone" type="tel" maxLength={32} placeholder="+234…" />
@@ -657,9 +675,8 @@ function WaitlistForm() {
               </div>
               <h3 className="font-serif text-2xl mb-2">Signal received.</h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                You're on the waitlist. We'll reach out as Helpa opens coverage
-                in your area. Tell a neighbour — density is what brings us to
-                your community sooner.
+                You're on the waitlist. We'll reach out as Helpa opens coverage in your area. Tell a
+                neighbour — density is what brings us to your community sooner.
               </p>
             </div>
           )}
@@ -728,9 +745,7 @@ function FaqSection() {
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber mb-4 block">
           06 — Questions
         </span>
-        <h2 className="font-serif text-4xl md:text-5xl leading-tight">
-          Answers before we ship.
-        </h2>
+        <h2 className="font-serif text-4xl md:text-5xl leading-tight">Answers before we ship.</h2>
       </div>
       <div className="divide-y divide-border border-t border-border">
         {FAQ.map((item) => (
