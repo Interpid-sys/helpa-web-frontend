@@ -5,21 +5,21 @@ import { Toaster } from "@/components/ui/sonner";
 import "../styles.css";
 
 export const metadata: Metadata = {
-  title: "Helpa - Community-powered emergency response for Nigeria",
+  title: "oyaAlerts - Community-powered emergency response for Nigeria",
   description:
-    "Helpa is building a community-powered emergency response network for Nigeria. Join the waitlist to help decide where we launch first.",
-  authors: [{ name: "Helpa" }],
+    "oyaAlerts is building a community-powered emergency response network for Nigeria. Join the waitlist to help decide where we launch first.",
+  authors: [{ name: "oyaAlerts" }],
   openGraph: {
-    title: "Helpa - Community-powered emergency response",
+    title: "oyaAlerts - Community-powered emergency response",
     description:
-      "Emergency help should not depend on who answers first. Join the waitlist for Helpa's coordinated response network.",
+      "Emergency help should not depend on who answers first. Join the waitlist for oyaAlerts' coordinated response network.",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Helpa - Community-powered emergency response",
+    title: "oyaAlerts - Community-powered emergency response",
     description:
-      "Emergency help should not depend on who answers first. Join the waitlist for Helpa's coordinated response network.",
+      "Emergency help should not depend on who answers first. Join the waitlist for oyaAlerts' coordinated response network.",
   },
 };
 
