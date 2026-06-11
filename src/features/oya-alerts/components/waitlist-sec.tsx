@@ -1,4 +1,5 @@
-import { InputHTMLAttributes, RefObject, useCallback, useEffect, useRef, useState } from "react";
+import type { ChangeEvent, InputHTMLAttributes, RefObject } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 const TRUST_ITEMS = ["NIN-verified network", "End-to-end encrypted", "Free for 4 Weeks"] as const;
 export const SCRIPT_ROLES = [
   { key: "A", value: "individual", label: "Protect myself & family" },
@@ -90,7 +91,7 @@ function ScriptWaitlistForm() {
               type: "text",
               placeholder: "Your first name",
               value: name,
-              onChange: (event: any) => setName(event.target.value),
+              onChange: (event: ChangeEvent<HTMLInputElement>) => setName(event.target.value),
             }}
             onNext={() => name.trim() && setStep(2)}
           />
@@ -103,7 +104,7 @@ function ScriptWaitlistForm() {
               type: "email",
               placeholder: "you@example.com",
               value: email,
-              onChange: (event: any) => setEmail(event.target.value),
+              onChange: (event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value),
             }}
             onNext={() => setStep(3)}
             onSkip={() => setStep(3)}
@@ -135,7 +136,7 @@ function ScriptWaitlistForm() {
               type: "tel",
               placeholder: "+234 800 000 0000",
               value: phone,
-              onChange: (event: any) => setPhone(event.target.value),
+              onChange: (event: ChangeEvent<HTMLInputElement>) => setPhone(event.target.value),
             }}
             onNext={submit}
             onSkip={submit}

@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 
 import { LOCATIONS, ROLES } from "../data/waitlist-options";
-import { BrandLogo } from "./brand-logo";
+import { BrandLogoDark } from "./brand-logo";
 import { Field, FormInput, FormSelect } from "./form-field";
 
 export function WaitlistSection() {
@@ -39,7 +39,7 @@ export function WaitlistSection() {
       <div className="max-w-xl mx-auto px-6 reveal">
         <div className="text-center mb-10">
           <div className="mb-8 flex justify-center">
-            <BrandLogo />
+            <BrandLogoDark />
           </div>
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber mb-4 block">
             05 - Launch signal
