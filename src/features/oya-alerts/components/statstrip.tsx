@@ -7,7 +7,7 @@ export const SCRIPT_STATS = [
 
 export default function StatsStrip() {
   return (
-    <div className="grid border-y border-[#283330] bg-[#18231F] md:grid-cols-4">
+    <div className="grid border-y border-[#283330] bg-[#18231F] md:grid-cols-4 py-18">
       {SCRIPT_STATS.map((stat) => (
         <div
           key={stat.val}

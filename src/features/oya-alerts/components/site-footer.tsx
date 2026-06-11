@@ -1,16 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { BrandLogoLight } from "./brand-logo";
 import { HeroCanvas } from "./hero-section";
 import { TYPEWRITER_WORDS } from "../data/landing-content";
 import { Gift } from "lucide-react";
-import { getDate } from "date-fns";
 
 export function SiteFooter() {
-  const formRef = useRef<HTMLElement | null>(null);
-
-  const scrollToScriptForm = useCallback(() => {
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
+  const scrollToWaitlist = () => {
+    document.getElementById("waitlist")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.pushState(null, "", "#waitlist");
+  };
   return (
     <>
       <div className="border-t border-border">
@@ -33,7 +31,11 @@ export function SiteFooter() {
 
               <div className="flex flex-col gap-4 mt-5">
                 <a
-                  onClick={scrollToScriptForm}
+                  href="#waitlist"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToWaitlist();
+                  }}
                   className="px-5 py-2.5 bg-primary text-primary-foreground text-sm text-center font-medium rounded-full hover:bg-primary/90 hover:-translate-y-0.5 transition-all shadow-sm"
                 >
                   Join waitlist

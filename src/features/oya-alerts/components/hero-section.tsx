@@ -1,17 +1,20 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { SignalPanel } from "./signal-panel";
 import ResponseFlow from "./response-flow";
 
 export function HeroSection() {
-  const formRef = useRef<HTMLElement | null>(null);
+  const scrollToWaitlist = () => {
+    const waitlist = document.getElementById("waitlist");
 
-  const scrollToScriptForm = useCallback(() => {
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
+    if (!waitlist) return;
+
+    waitlist.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.pushState(null, "", "#waitlist");
+  };
   return (
-    <header className="max-w-6xl mx-auto px-6 pt-14 md:pt-20 pb-24">
+    <header className="relative max-w-6xl mx-auto px-6 pt-14 md:pt-20 pb-24 overflow-hidden">
       <HeroCanvas />
-      <div className="max-w-4xl mx-auto text-center fade-up">
+      <div className="relative z-10 max-w-4xl mx-auto text-center fade-up">
         <div className="script-fade-up mb-8 inline-flex items-center gap-2 rounded-full border border-primary/15 bg-[#3dba72]/10 px-4 py-1.5 text-xs text-primary">
           <span className="size-1.5 rounded-full bg-primary text-primary script-pulse" />
           Now accepting early access
@@ -25,7 +28,7 @@ export function HeroSection() {
         </p>
 
         <div className="script-fade-up mt-10 flex flex-col items-center gap-5 [animation-delay:400ms]">
-          <SOSButton onClick={scrollToScriptForm} />
+          <SOSButton onClick={scrollToWaitlist} />
           <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-primary">
             <span>
               Join <strong className="font-medium text-primary">before launch</strong>
@@ -42,7 +45,7 @@ export function HeroSection() {
         </p>
       </div>
 
-      <div className="mt-20 reveal">
+      <div className="relative z-10 mt-20 reveal">
         <SignalPanel />
         <div className="mt-10 ">
           <ResponseFlow />
@@ -63,15 +66,10 @@ type NetworkNode = {
 };
 
 function SOSButton({ onClick }: { onClick: () => void }) {
-  const formRef = useRef<HTMLElement | null>(null);
-
-  const scrollToScriptForm = useCallback(() => {
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
   return (
     <button
       type="button"
-      onClick={scrollToScriptForm}
+      onClick={onClick}
       className="group relative flex size-30 items-center justify-center rounded-full bg-transparent"
       aria-label="Join script comparison waitlist"
     >
@@ -224,5 +222,7 @@ export function HeroCanvas() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 size-full opacity-90" />;
+  return (
+    <canvas ref={canvasRef} className="absolute inset-0 size-full opacity-90 pointer-events-none" />
+  );
 }

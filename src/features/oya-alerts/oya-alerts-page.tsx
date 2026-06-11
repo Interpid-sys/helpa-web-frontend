@@ -27,7 +27,7 @@ export function OyaAlertsPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/15">
-      <SiteNav className="border-b border-muted" />
+      <SiteNav />
       <HeroSection />
       <StatsStrip />
       <WhyExistSection />

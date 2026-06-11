@@ -1,5 +1,7 @@
 import type { ChangeEvent, InputHTMLAttributes, RefObject } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+
 const TRUST_ITEMS = ["NIN-verified network", "End-to-end encrypted", "Free for 4 Weeks"] as const;
 export const SCRIPT_ROLES = [
   { key: "A", value: "individual", label: "Protect myself & family" },
@@ -19,15 +21,47 @@ export const SCRIPT_STATES = [
 ] as const;
 
 type ScriptOption = (typeof SCRIPT_ROLES)[number] | (typeof SCRIPT_STATES)[number];
+type FieldName = "name" | "email" | "role" | "state" | "phone";
+type ValidationErrors = Partial<Record<FieldName, string>>;
+type WaitlistResponse = { ok: true; waitlistNumber: number } | { ok: false; message?: string };
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_PATTERN = /^\+?[0-9\s()-]{7,32}$/;
+
+function validateName(value: string) {
+  const trimmed = value.trim();
+
+  if (!trimmed) return "Enter your name to continue.";
+  if (trimmed.length < 2) return "Name must be at least 2 characters.";
+
+  return "";
+}
+
+function validateEmail(value: string) {
+  const trimmed = value.trim();
+
+  if (!trimmed) return "Enter your email address.";
+  if (!EMAIL_PATTERN.test(trimmed)) return "Enter a valid email address.";
+
+  return "";
+}
+
+function validateRequiredOption(value: string, message: string) {
+  return value ? "" : message;
+}
+
+function validatePhone(value: string) {
+  const trimmed = value.trim();
+
+  if (!trimmed) return "Enter your phone number.";
+  if (!PHONE_PATTERN.test(trimmed)) return "Enter a valid phone number.";
+
+  return "";
+}
 
 export default function ScriptFormSection({ refEl }: { refEl: RefObject<HTMLElement | null> }) {
-  const formRef = useRef<HTMLElement | null>(null);
-  const scrollToScriptForm = useCallback(() => {
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
-
   return (
-    <section ref={refEl} className="bg-[#111614] px-6 py-24">
+    <section id="waitlist" ref={refEl} className="bg-[#111614] px-6 py-24 scroll-mt-24">
       <div className="mx-auto grid max-w-5xl gap-12 md:grid-cols-2">
         <div>
           <div className="mb-3 text-xs font-medium uppercase tracking-widest text-[#3dba72]">
@@ -65,15 +99,109 @@ function ScriptWaitlistForm() {
   const [phone, setPhone] = useState("");
   const [position, setPosition] = useState(0);
   const [done, setDone] = useState(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [submitting, setSubmitting] = useState(false);
 
   const autoSelect = (setter: (value: string) => void, value: string, nextStep: number) => {
     setter(value);
+    setErrors((current) => ({ ...current, role: "", state: "" }));
     setTimeout(() => setStep(nextStep), 280);
   };
 
-  const submit = () => {
-    setPosition(Math.floor(Math.random() * 300) + 100);
-    setDone(true);
+  const setFieldError = (field: FieldName, message: string) => {
+    setErrors((current) => ({ ...current, [field]: message }));
+  };
+
+  const clearFieldError = (field: FieldName) => {
+    setErrors((current) => ({ ...current, [field]: "" }));
+  };
+
+  const validateStep = (field: FieldName) => {
+    const validators: Record<FieldName, () => string> = {
+      name: () => validateName(name),
+      email: () => validateEmail(email),
+      role: () => validateRequiredOption(role, "Choose how you want to use Helpa."),
+      state: () => validateRequiredOption(state, "Choose your state."),
+      phone: () => validatePhone(phone),
+    };
+    const message = validators[field]();
+
+    setFieldError(field, message);
+    return !message;
+  };
+
+  const validateAllFields = () => {
+    const nextErrors: ValidationErrors = {
+      name: validateName(name),
+      email: validateEmail(email),
+      role: validateRequiredOption(role, "Choose how you want to use Helpa."),
+      state: validateRequiredOption(state, "Choose your state."),
+      phone: validatePhone(phone),
+    };
+    const firstInvalidField = (Object.keys(nextErrors) as FieldName[]).find(
+      (field) => nextErrors[field],
+    );
+
+    setErrors(nextErrors);
+
+    if (firstInvalidField) {
+      const stepByField: Record<FieldName, number> = {
+        name: 1,
+        email: 2,
+        role: 3,
+        state: 4,
+        phone: 5,
+      };
+
+      setStep(stepByField[firstInvalidField]);
+      return false;
+    }
+
+    return true;
+  };
+
+  const submit = async () => {
+    if (!validateAllFields()) return;
+
+    setSubmitting(true);
+
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          role,
+          state,
+          phone,
+        }),
+      });
+      const result = (await response.json().catch(() => null)) as WaitlistResponse | null;
+
+      if (!result) {
+        toast.error("We could not submit your details. Please try again.");
+        return;
+      }
+
+      if (!result.ok) {
+        toast.error(result.message ?? "We could not submit your details. Please try again.");
+        return;
+      }
+
+      if (!response.ok) {
+        toast.error("We could not submit your details. Please try again.");
+        return;
+      }
+
+      setPosition(result.waitlistNumber);
+      setDone(true);
+      toast.success("You're on the oyaAlerts waitlist.");
+    } catch {
+      toast.error("We could not submit your details. Please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -91,9 +219,15 @@ function ScriptWaitlistForm() {
               type: "text",
               placeholder: "Your first name",
               value: name,
-              onChange: (event: ChangeEvent<HTMLInputElement>) => setName(event.target.value),
+              required: true,
+              minLength: 2,
+              onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                setName(event.target.value);
+                clearFieldError("name");
+              },
             }}
-            onNext={() => name.trim() && setStep(2)}
+            error={errors.name}
+            onNext={() => validateStep("name") && setStep(2)}
           />
         ) : step === 2 ? (
           <TextStep
@@ -104,10 +238,14 @@ function ScriptWaitlistForm() {
               type: "email",
               placeholder: "you@example.com",
               value: email,
-              onChange: (event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value),
+              required: true,
+              onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                setEmail(event.target.value);
+                clearFieldError("email");
+              },
             }}
-            onNext={() => setStep(3)}
-            onSkip={() => setStep(3)}
+            error={errors.email}
+            onNext={() => validateStep("email") && setStep(3)}
           />
         ) : step === 3 ? (
           <OptionsStep
@@ -117,6 +255,7 @@ function ScriptWaitlistForm() {
             options={SCRIPT_ROLES}
             selected={role}
             onSelect={(value) => autoSelect(setRole, value, 4)}
+            error={errors.role}
           />
         ) : step === 4 ? (
           <OptionsStep
@@ -126,6 +265,7 @@ function ScriptWaitlistForm() {
             options={SCRIPT_STATES}
             selected={state}
             onSelect={(value) => autoSelect(setState, value, 5)}
+            error={errors.state}
           />
         ) : (
           <TextStep
@@ -136,10 +276,16 @@ function ScriptWaitlistForm() {
               type: "tel",
               placeholder: "+234 800 000 0000",
               value: phone,
-              onChange: (event: ChangeEvent<HTMLInputElement>) => setPhone(event.target.value),
+              required: true,
+              onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                setPhone(event.target.value);
+                clearFieldError("phone");
+              },
             }}
+            error={errors.phone}
             onNext={submit}
-            onSkip={submit}
+            nextLabel={submitting ? "Joining..." : "Join waitlist"}
+            disabled={submitting}
           />
         )}
       </div>
@@ -168,6 +314,9 @@ function TextStep({
   question,
   hint,
   inputProps,
+  error,
+  nextLabel = "Continue",
+  disabled = false,
   onNext,
   onSkip,
 }: {
@@ -175,6 +324,9 @@ function TextStep({
   question: string;
   hint?: string;
   inputProps: InputHTMLAttributes<HTMLInputElement>;
+  error?: string;
+  nextLabel?: string;
+  disabled?: boolean;
   onNext?: () => void;
   onSkip?: () => void;
 }) {
@@ -196,20 +348,37 @@ function TextStep({
       <input
         ref={inputRef}
         {...inputProps}
-        className="mt-7 w-full border-0 border-b border-[#283330] bg-transparent px-0 py-3 text-lg text-[#f5f2ec] outline-none transition placeholder:text-[#8a9e94] focus:border-[#3dba72]"
+        disabled={disabled}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `waitlist-step-${stepNum}-error` : undefined}
+        className={`mt-7 w-full border-0 border-b bg-transparent px-0 py-3 text-lg text-[#f5f2ec] outline-none transition placeholder:text-[#8a9e94] ${
+          error
+            ? "border-[#e87070] focus:border-[#e87070]"
+            : "border-[#283330] focus:border-[#3dba72]"
+        }`}
         onKeyDown={(event) => {
-          if (event.key === "Enter") onNext?.();
+          if (disabled) return;
+          if (event.key === "Enter") {
+            event.preventDefault();
+            onNext?.();
+          }
           inputProps.onKeyDown?.(event);
         }}
       />
+      {error ? (
+        <p id={`waitlist-step-${stepNum}-error`} className="mt-3 text-sm text-[#e87070]">
+          {error}
+        </p>
+      ) : null}
       <div className="mt-2 flex flex-col items-start gap-2">
         {onNext ? (
           <button
             type="button"
             onClick={onNext}
-            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#3dba72] px-5 py-3 text-sm font-medium text-[#0d2818] transition hover:-translate-y-0.5 hover:bg-[#4ecf82]"
+            disabled={disabled}
+            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#3dba72] px-5 py-3 text-sm font-medium text-[#0d2818] transition hover:-translate-y-0.5 hover:bg-[#4ecf82] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-[#3dba72]"
           >
-            Continue <ArrowIcon />
+            {nextLabel} <ArrowIcon />
           </button>
         ) : null}
         {onSkip ? (
@@ -250,6 +419,7 @@ function OptionsStep({
   options,
   selected,
   onSelect,
+  error,
 }: {
   stepNum: number;
   question: string;
@@ -257,6 +427,7 @@ function OptionsStep({
   options: readonly ScriptOption[];
   selected: string;
   onSelect: (value: string) => void;
+  error?: string;
 }) {
   return (
     <div>
@@ -267,7 +438,12 @@ function OptionsStep({
         {question}
       </div>
       {hint ? <div className="mt-2 text-sm leading-6 text-[#8a9e94]">{hint}</div> : null}
-      <div className="mt-7 flex flex-col gap-3">
+      <div
+        className="mt-7 flex flex-col gap-3"
+        role="radiogroup"
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `waitlist-step-${stepNum}-error` : undefined}
+      >
         {options.map((option) => {
           const isSelected = selected === option.value;
           return (
@@ -275,6 +451,8 @@ function OptionsStep({
               type="button"
               key={option.value}
               onClick={() => onSelect(option.value)}
+              role="radio"
+              aria-checked={isSelected}
               className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition ${
                 isSelected
                   ? "border-[#3dba72] bg-[#3dba72]/10 text-[#f5f2ec]"
@@ -295,6 +473,11 @@ function OptionsStep({
           );
         })}
       </div>
+      {error ? (
+        <p id={`waitlist-step-${stepNum}-error`} className="mt-3 text-sm text-[#e87070]">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }
