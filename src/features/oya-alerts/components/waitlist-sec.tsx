@@ -1,5 +1,6 @@
 import type { ChangeEvent, InputHTMLAttributes, RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
+import QRCode from "qrcode";
 import { toast } from "sonner";
 
 const TRUST_ITEMS = ["NIN-verified network", "End-to-end encrypted", "Free for 4 Weeks"] as const;
@@ -25,6 +26,7 @@ type FieldName = "name" | "email" | "role" | "state" | "phone";
 type ValidationErrors = Partial<Record<FieldName, string>>;
 type WaitlistResponse = { ok: true; waitlistNumber: number } | { ok: false; message?: string };
 
+const INVITE_BASE_URL = "https://oyaa.ng";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^\+?[0-9\s()-]{7,32}$/;
 
@@ -57,6 +59,23 @@ function validatePhone(value: string) {
   if (!PHONE_PATTERN.test(trimmed)) return "Enter a valid phone number.";
 
   return "";
+}
+
+function isMobileDevice() {
+  if (typeof navigator === "undefined") return false;
+
+  return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+function getInviteUrl(position: number) {
+  const baseUrl =
+    typeof window !== "undefined" && window.location.origin
+      ? window.location.origin
+      : INVITE_BASE_URL;
+  const inviteUrl = new URL(baseUrl);
+
+  inviteUrl.searchParams.set("invite", String(position));
+  return inviteUrl.toString();
 }
 
 export default function ScriptFormSection({ refEl }: { refEl: RefObject<HTMLElement | null> }) {
@@ -483,19 +502,65 @@ function OptionsStep({
 }
 
 function Success({ position, name }: { position: number; name: string }) {
-  const share = () => {
-    if (typeof navigator !== "undefined" && navigator.share) {
-      navigator
-        .share({
-          title: "Helpa",
-          text: "I joined the Helpa waitlist. Safety for Nigeria.",
-          url: "https://oyaa.ng",
-        })
-        .catch(() => undefined);
-      return;
-    }
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [sharing, setSharing] = useState(false);
+  const inviteUrl = getInviteUrl(position);
 
-    navigator.clipboard?.writeText("https://oyaa.ng");
+  const share = async () => {
+    const shareText = `I joined the Helpa waitlist at #${position}. Join me: ${inviteUrl}`;
+
+    setSharing(true);
+
+    try {
+      const nextQrCodeUrl = await QRCode.toDataURL(inviteUrl, {
+        errorCorrectionLevel: "M",
+        margin: 2,
+        scale: 8,
+        width: 240,
+        color: {
+          dark: "#0d2818",
+          light: "#f5f2ec",
+        },
+      });
+
+      setQrCodeUrl(nextQrCodeUrl);
+
+      if (isMobileDevice()) {
+        window.location.href = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+        return;
+      }
+
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({
+          title: "Helpa",
+          text: shareText,
+          url: inviteUrl,
+        });
+        return;
+      }
+
+      await navigator.clipboard?.writeText(inviteUrl);
+      toast.success("Invite link copied.");
+    } catch {
+      toast.error("Could not prepare your invite. Please try again.");
+    } finally {
+      setSharing(false);
+    }
+  };
+
+  const shareOnWhatsApp = () => {
+    const shareText = `I joined the Helpa waitlist at #${position}. Join me: ${inviteUrl}`;
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank", "noopener");
+  };
+
+  const copyInvite = async () => {
+    try {
+      await navigator.clipboard?.writeText(inviteUrl);
+      toast.success("Invite link copied.");
+    } catch {
+      toast.error("Could not copy your invite link.");
+    }
   };
 
   return (
@@ -513,13 +578,50 @@ function Success({ position, name }: { position: number; name: string }) {
         We&apos;ll reach out when oyaAlerts launches in your area. Emergencies do not wait, and
         neither should help.
       </p>
-      <button
-        type="button"
-        onClick={share}
-        className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#3dba72] px-5 py-3 text-sm font-medium text-[#0d2818] transition hover:-translate-y-0.5 hover:bg-[#4ecf82]"
-      >
-        Oyaa Share <ArrowIcon />
-      </button>
+
+      {qrCodeUrl ? (
+        <div className="mx-auto mt-8 w-full max-w-[280px] rounded-2xl border border-[#3dba72]/25 bg-[#f5f2ec] p-5 text-[#0d2818]">
+          <div className="aspect-square w-full overflow-hidden rounded-xl bg-[#f5f2ec]">
+            <img
+              src={qrCodeUrl}
+              alt="Custom Helpa invite QR code"
+              className="size-full object-contain"
+            />
+          </div>
+          <div className="mt-4 text-xs font-medium uppercase tracking-[0.18em]">Custom invite</div>
+          <div className="mt-2 break-all text-xs leading-5 opacity-75">{inviteUrl}</div>
+        </div>
+      ) : null}
+
+      <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <button
+          type="button"
+          onClick={share}
+          disabled={sharing}
+          className="inline-flex items-center gap-2 rounded-xl bg-[#3dba72] px-5 py-3 text-sm font-medium text-[#0d2818] transition hover:-translate-y-0.5 hover:bg-[#4ecf82] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-[#3dba72]"
+        >
+          {sharing ? "Preparing..." : "Oyaa Share"} <ArrowIcon />
+        </button>
+
+        {qrCodeUrl ? (
+          <>
+            <button
+              type="button"
+              onClick={shareOnWhatsApp}
+              className="inline-flex items-center gap-2 rounded-xl border border-[#3dba72]/35 px-5 py-3 text-sm font-medium text-[#3dba72] transition hover:-translate-y-0.5 hover:border-[#3dba72] hover:bg-[#3dba72]/10"
+            >
+              WhatsApp
+            </button>
+            <button
+              type="button"
+              onClick={copyInvite}
+              className="text-xs text-[#8a9e94] underline decoration-transparent transition hover:text-[#f5f2ec] hover:decoration-[#8a9e94]"
+            >
+              Copy invite link
+            </button>
+          </>
+        ) : null}
+      </div>
     </div>
   );
 }
