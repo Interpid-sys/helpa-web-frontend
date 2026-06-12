@@ -34,12 +34,12 @@ export function EcosystemSection() {
           {ECOSYSTEM_ROLES.map((item, index) => (
             <div
               key={item.title}
-              className="flex flex-col md:grid md:grid-cols-2 w-full gap-6 md:gap-10 items-center justify-between py-5 border-b border-command-foreground/15 reveal hover:bg-command-foreground/3 transition-colors"
+              className="flex flex-col md:grid md:grid-cols-2 w-full gap-6 md:gap-10 md:items-center justify-between py-5 border-b border-command-foreground/15 reveal hover:bg-command-foreground/3 transition-colors"
               style={{ transitionDelay: `${index * 50}ms` }}
             >
               {/* <h4 className="text-base md:text-lg font-medium">{item.title}</h4> */}
               <p className=" text-sm text-command-foreground/65 leading-relaxed">{item.note}</p>
-              <p className="inline-flex justify-end items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-command-foreground/55">
+              <p className="inline-flex md:justify-end items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-command-foreground/55">
                 <span className="size-1.5 rounded-full bg-amber" />
                 Needed
               </p>
