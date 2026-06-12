@@ -78,6 +78,15 @@ function getInviteUrl(position: number) {
   return inviteUrl.toString();
 }
 
+function getIncomingInviteNumber() {
+  if (typeof window === "undefined") return null;
+
+  const invite = new URLSearchParams(window.location.search).get("invite");
+  if (!invite || !/^[1-9]\d*$/.test(invite)) return null;
+
+  return Number(invite);
+}
+
 export default function ScriptFormSection({ refEl }: { refEl: RefObject<HTMLElement | null> }) {
   return (
     <section id="waitlist" ref={refEl} className="bg-[#111614] px-6 py-24 scroll-mt-24">
@@ -194,6 +203,7 @@ function ScriptWaitlistForm() {
           role,
           state,
           phone,
+          invitedByWaitlistNumber: getIncomingInviteNumber(),
         }),
       });
       const result = (await response.json().catch(() => null)) as WaitlistResponse | null;
@@ -507,7 +517,7 @@ function Success({ position, name }: { position: number; name: string }) {
   const inviteUrl = getInviteUrl(position);
 
   const share = async () => {
-    const shareText = `I joined the Helpa waitlist at #${position}. Join me: ${inviteUrl}`;
+    const shareText = `I joined the oyaAlerts waitlist at #${position}. Join me: ${inviteUrl}`;
 
     setSharing(true);
 
@@ -532,7 +542,7 @@ function Success({ position, name }: { position: number; name: string }) {
 
       if (typeof navigator !== "undefined" && navigator.share) {
         await navigator.share({
-          title: "Helpa",
+          title: "Oya Alerts",
           text: shareText,
           url: inviteUrl,
         });
@@ -549,7 +559,7 @@ function Success({ position, name }: { position: number; name: string }) {
   };
 
   const shareOnWhatsApp = () => {
-    const shareText = `I joined the Helpa waitlist at #${position}. Join me: ${inviteUrl}`;
+    const shareText = `I joined the oyaAlerts waitlist at #${position}. Join me: ${inviteUrl}`;
 
     window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank", "noopener");
   };
@@ -588,7 +598,7 @@ function Success({ position, name }: { position: number; name: string }) {
               className="size-full object-contain"
             />
           </div>
-          <div className="mt-4 text-xs font-medium uppercase tracking-[0.18em]">Custom invite</div>
+          <div className="mt-4 text-xs font-medium uppercase tracking-[0.18em]">{name}</div>
           <div className="mt-2 break-all text-xs leading-5 opacity-75">{inviteUrl}</div>
         </div>
       ) : null}
