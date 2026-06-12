@@ -28,7 +28,7 @@ export default function ResponseFlow() {
           <div key={step.label} className="flex flex-col items-center">
             <div className="flex items-center">
               <div
-                className={`flex size-8 items-center justify-center rounded-full border text-[0.6rem] transition ${
+                className={`flex size-4 md:size-8 items-center justify-center rounded-full border text-[0.6rem] transition ${
                   lit
                     ? "border-[#3dba72] bg-[#3dba72]/15 text-[#3dba72]"
                     : "border-transparent bg-transparent text-transparent"
@@ -37,7 +37,7 @@ export default function ResponseFlow() {
                 {step.icon}
               </div>
               {index < FLOW_STEPS.length - 1 ? (
-                <div className="h-px w-9 bg-transparent">
+                <div className="h-px w-4 md:w-9 bg-transparent">
                   <div
                     className={`h-px bg-[#3dba72] transition-all ${index < active ? "w-full" : "w-0"}`}
                   />
@@ -45,7 +45,7 @@ export default function ResponseFlow() {
               ) : null}
             </div>
             <div
-              className={`mt-2 max-w-17 text-center text-[0.62rem] leading-snug ${lit ? "text-primary" : "text-transparent"}`}
+              className={`mt-2 max-w-12 md:max-w-17 text-center text-[0.62rem] leading-snug ${lit ? "text-primary" : "text-transparent"}`}
             >
               {step.label}
             </div>
