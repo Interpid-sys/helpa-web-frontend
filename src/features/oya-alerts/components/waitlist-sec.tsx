@@ -148,7 +148,7 @@ function ScriptWaitlistForm() {
     const validators: Record<FieldName, () => string> = {
       name: () => validateName(name),
       email: () => validateEmail(email),
-      role: () => validateRequiredOption(role, "Choose how you want to use Helpa."),
+      role: () => validateRequiredOption(role, "Choose how you want to use oyaAlerts."),
       state: () => validateRequiredOption(state, "Choose your state."),
       phone: () => validatePhone(phone),
     };
@@ -162,7 +162,7 @@ function ScriptWaitlistForm() {
     const nextErrors: ValidationErrors = {
       name: validateName(name),
       email: validateEmail(email),
-      role: validateRequiredOption(role, "Choose how you want to use Helpa."),
+      role: validateRequiredOption(role, "Choose how you want to use Oyaalerts."),
       state: validateRequiredOption(state, "Choose your state."),
       phone: validatePhone(phone),
     };
@@ -279,7 +279,7 @@ function ScriptWaitlistForm() {
         ) : step === 3 ? (
           <OptionsStep
             stepNum={3}
-            question="How do you want to use Helpa?"
+            question="How do you want to use oyaAlerts?"
             hint="This helps us tailor your experience."
             options={SCRIPT_ROLES}
             selected={role}
@@ -594,7 +594,7 @@ function Success({ position, name }: { position: number; name: string }) {
           <div className="aspect-square w-full overflow-hidden rounded-xl bg-[#f5f2ec]">
             <img
               src={qrCodeUrl}
-              alt="Custom Helpa invite QR code"
+              alt="Custom oyaAlerts invite QR code"
               className="size-full object-contain"
             />
           </div>
