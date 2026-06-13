@@ -8,11 +8,9 @@ import { HowItWorksSection } from "./components/how-it-works-section";
 import { SiteFooter } from "./components/site-footer";
 import { SiteNav } from "./components/site-nav";
 import ScriptFormSection from "./components/waitlist-sec";
-import { WaitlistSection } from "./components/waitlist-section";
 import { WhyExistSection } from "./components/why-exist-section";
 import { WhyJoinSection } from "./components/why-join-section";
 import { useScrollReveal } from "./hooks/use-scroll-reveal";
-import { ScriptComparisonSections } from "./script-comparison/script-comparison-sections";
 import StatsStrip from "./components/statstrip";
 import LayersSection from "./components/layersection";
 
