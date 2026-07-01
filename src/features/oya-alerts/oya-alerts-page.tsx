@@ -13,6 +13,8 @@ import { WhyJoinSection } from "./components/why-join-section";
 import { useScrollReveal } from "./hooks/use-scroll-reveal";
 import StatsStrip from "./components/statstrip";
 import LayersSection from "./components/layersection";
+import { VacancySection } from "./components/vacancy-section";
+import { NewsSection } from "./components/news-section";
 
 export function OyaAlertsPage() {
   useScrollReveal();
@@ -34,6 +36,8 @@ export function OyaAlertsPage() {
       <WhyJoinSection />
       <LayersSection />
       <ScriptFormSection refEl={formRef} />
+      {/* <NewsSection /> */}
+      <VacancySection />
       <FaqSection />
       <SiteFooter />
     </div>

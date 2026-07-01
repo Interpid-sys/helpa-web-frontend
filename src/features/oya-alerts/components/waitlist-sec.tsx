@@ -93,15 +93,15 @@ export default function ScriptFormSection({ refEl }: { refEl: RefObject<HTMLElem
       <div className="mx-auto grid max-w-5xl gap-12 md:grid-cols-2">
         <div>
           <div className="mb-3 text-xs font-medium uppercase tracking-widest text-[#3dba72]">
-            05 - Join the waitlist/Launch signal
+            05 - Join the movement / Launch updates
           </div>
           <h2 className="font-serif text-[clamp(1.8rem,4vw,2.8rem)] leading-tight text-[#f5f2ec]">
             Because emergencies do not wait
             <em className="text-[#3dba72]"> and neither should help.</em>
           </h2>
           <p className="mt-5 text-sm leading-7 text-[#8a9e94]">
-            Be among the first to experience a new standard of personal and community safety. Get
-            early access, exclusive launch benefits, and priority membership opportunities.
+            Be among the first to receive safety content, product PR, pilot notifications, and early
+            access as Oya Alerts moves from waitlist into community rollout.
           </p>
           <div className="mt-8 space-y-3">
             {TRUST_ITEMS.map((item) => (
@@ -300,7 +300,7 @@ function ScriptWaitlistForm() {
           <TextStep
             stepNum={5}
             question="Last one - your phone number."
-            hint="For SMS early access invite. We'll never spam you."
+            hint="For launch notifications and safety updates. We'll never spam you."
             inputProps={{
               type: "tel",
               placeholder: "+234 800 000 0000",
@@ -313,7 +313,7 @@ function ScriptWaitlistForm() {
             }}
             error={errors.phone}
             onNext={submit}
-            nextLabel={submitting ? "Joining..." : "Join waitlist"}
+            nextLabel={submitting ? "Joining..." : "Join movement"}
             disabled={submitting}
           />
         )}
@@ -362,7 +362,7 @@ function TextStep({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
   }, []);
 
   return (
@@ -579,14 +579,14 @@ function Success({ position, name }: { position: number; name: string }) {
         &#10003;
       </div>
       <div className="mb-5 inline-block rounded-full border border-[#3dba72]/25 bg-[#3dba72]/10 px-4 py-2 text-sm text-[#3dba72]">
-        #{position} on the waitlist
+        #{position} in the safety movement
       </div>
       <h3 className="font-serif text-3xl text-[#f5f2ec]">
         You&apos;re in{name ? `, ${name}` : ""}.
       </h3>
       <p className="mx-auto mt-3 max-w-sm text-sm leading-7 text-[#8a9e94]">
-        We&apos;ll reach out when oyaAlerts launches in your area. Emergencies do not wait, and
-        neither should help.
+        We&apos;ll send safety content, product updates, and launch notifications as Oya Alerts
+        opens coverage in your area.
       </p>
 
       {qrCodeUrl ? (

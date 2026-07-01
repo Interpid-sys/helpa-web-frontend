@@ -5,14 +5,20 @@ import { Toaster } from "@/components/ui/sonner";
 import "../styles.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://oyaa.ng"),
   title: "oyaAlerts - Community-powered emergency response for Nigeria",
   description:
     "oyaAlerts is building a community-powered emergency response network for Nigeria. Join the waitlist to help decide where we launch first.",
   authors: [{ name: "oyaAlerts" }],
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     title: "oyaAlerts - Community-powered emergency response",
     description:
       "Emergency help should not depend on who answers first. Join the waitlist for oyaAlerts' coordinated response network.",
+
     images: [{ url: "https://oyaa.ng/og-banner.png", width: 1200, height: 630 }],
     url: "https://oyaa.ng",
     type: "website",
