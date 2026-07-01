@@ -88,7 +88,7 @@ export function SiteNav({ className }: { className?: string } = {}) {
           <a
             href="#waitlist"
             onClick={(event) => handleAnchorClick(event, "waitlist")}
-            className="px-5 py-2.5 bg-amber-500 text-primary-foreground text-sm font-medium rounded-full hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
+            className="hidden md:block px-5 py-2.5 bg-amber-500 text-primary-foreground text-sm font-medium rounded-full hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
           >
             Support the project
           </a>

@@ -151,9 +151,9 @@ export const SCRIPT_LAYERS = [
   },
 ] as const;
 export const TYPEWRITER_WORDS = [
-  "robbery.",
-  "kidnapping.",
-  "accidents.",
-  "medical emergencies.",
-  "distress.",
+  "robbery",
+  "kidnapping",
+  "accidents",
+  "medical emergencies",
+  "distress",
 ] as const;

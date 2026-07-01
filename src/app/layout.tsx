@@ -18,6 +18,8 @@ export const metadata: Metadata = {
     title: "oyaAlerts - Community-powered emergency response",
     description:
       "Emergency help should not depend on who answers first. Join the waitlist for oyaAlerts' coordinated response network.",
+
+    images: [{ url: "https://oyaa.ng/og-banner.png", width: 1200, height: 630 }],
     url: "https://oyaa.ng",
     type: "website",
   },
@@ -26,6 +28,7 @@ export const metadata: Metadata = {
     title: "oyaAlerts - Community-powered emergency response",
     description:
       "Emergency help should not depend on who answers first. Join the waitlist for oyaAlerts' coordinated response network.",
+    images: ["https://oyaa.ng/og-banner.png"],
   },
 };
 
