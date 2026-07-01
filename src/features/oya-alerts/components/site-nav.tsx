@@ -68,6 +68,20 @@ export function SiteNav({ className }: { className?: string } = {}) {
           >
             FAQ
           </a>
+          {/* <a
+            href="#news"
+            onClick={(event) => handleAnchorClick(event, "news")}
+            className="hover:text-foreground transition-colors"
+          >
+            News
+          </a> */}
+          <a
+            href="#vacancy"
+            onClick={(event) => handleAnchorClick(event, "vacancy")}
+            className="hover:text-foreground transition-colors"
+          >
+            Careers
+          </a>
         </div>
 
         <div className="flex gap-4">
@@ -76,14 +90,14 @@ export function SiteNav({ className }: { className?: string } = {}) {
             onClick={(event) => handleAnchorClick(event, "waitlist")}
             className="px-5 py-2.5 bg-amber-500 text-primary-foreground text-sm font-medium rounded-full hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
           >
-            Support The Project
+            Support the project
           </a>
           <a
             href="#waitlist"
             onClick={(event) => handleAnchorClick(event, "waitlist")}
             className="px-5 py-2.5 bg-primary text-primary-foreground text-sm font-medium rounded-full hover:bg-primary/90 hover:-translate-y-0.5 transition-all shadow-sm"
           >
-            Join waitlist
+            Join movement
           </a>
         </div>
       </div>
